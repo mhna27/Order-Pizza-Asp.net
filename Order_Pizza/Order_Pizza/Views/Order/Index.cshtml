@@ -1,0 +1,101 @@
+﻿@model Order_Pizza.ViewModels.PizzaOrderVM
+@{
+}
+
+@*<table class="table">
+    <thead>
+        <tr>
+            <th>Pizza Name</th>
+            <th>Ordered?</th>
+            <th>Order ID</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var pizza in Model.Pizzas)
+        {
+            <tr>
+                <td>@pizza.Name</td>
+                <td>@(pizza.IsOrdered ? "Yes" : "No")</td>
+                <td>@(pizza.OrderId.HasValue ? pizza.OrderId.Value.ToString() : "")</td>
+                <td>
+                    @if (!pizza.IsOrdered)
+                    {
+                        <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Upsert", "Order", new { pizzaId = pizza.Id })'">Order</button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3>Total Pizzas: @Model.Pizzas.Count()</h3>*@
+
+
+<div class="mx-5">
+    <main class="container text-center bg-success bg-opacity-25 py-3 rounded">
+        @if (Model.Pizzas.Count() > 0)
+        {
+            <h2 class="display-6 py-3 bg-warning bg-opacity-25 rounded">
+                You can order your favorite pizza from the list below
+            </h2>
+            @*int items_Count = Model.Count<Pizza>();*@
+            int items_Count = Model.Pizzas.Count();
+            int col_Count = 3;
+            int col_Row = (int)Math.Ceiling((double)items_Count / col_Count);
+            int index = 0;
+            var pizzas = Model.Pizzas.ToList();
+
+            for (int r = 0; r < col_Row; r++)
+            {
+                <div class="row py-3">
+                    @for (int c = 0; c < col_Count; c++)
+                    {
+                        if (index < items_Count)
+                        {
+                            <div class="col" align="center">
+                                <div class="card m-2" style="width: 18rem;">
+                                    <div class="position-relative">
+                                        @if (@pizzas.ElementAt(index).IsOrdered)
+                                        {
+                                            <img src="~/upload/images/@pizzas.ElementAt(index).Image_Url" class="card-img-top opacity-75" alt="@pizzas.ElementAt(index).Name">
+                                            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                                                <h1 class="text-success top-0 start-0 fw-bold my-5" style="transform: rotate(45deg);transform-origin: center;">Orderd !!!</h1>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <img src="~/upload/images/@pizzas.ElementAt(index).Image_Url" class="card-img-top" alt="@pizzas.ElementAt(index).Name">
+                                        }
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">@pizzas.ElementAt(index).Name pizza</h5>
+                                        <p class="card-text text-muted card-text-summary">Ingredients : @pizzas.ElementAt(index).Description</p>
+                                        @if (@pizzas.ElementAt(index).IsOrdered)
+                                        {
+                                            <a asp-action="Upsert" asp-route-pizza_Id="@pizzas.ElementAt(index).Id" asp-route-order_Id="@pizzas.ElementAt(index).OrderId" class="btn btn-primary float-start my-1">Edit order</a>
+                                            <a asp-action="Delete" asp-route-id="@pizzas.ElementAt(index).OrderId" class="btn btn-danger float-end my-1">Cancel order</a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-action="Upsert" asp-route-pizza_Id="@pizzas.ElementAt(index).Id" asp-route-order_Id="@pizzas.ElementAt(index).OrderId" class="btn btn-primary my-1">Order</a>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            index++;
+                        }
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <h2 class="display-6 py-3 bg-danger bg-opacity-75 rounded">
+                Sorry!!! Pizza is not available at this moment
+            </h2>
+        }
+    </main>
+</div>
+
+<partial name="_Notification" />

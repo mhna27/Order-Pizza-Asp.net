@@ -1,0 +1,55 @@
+﻿@model Order_Pizza.ViewModels.OrderVM
+
+@{
+    ViewData["Title"] = "Order page";
+}
+
+<h1>Order page</h1>
+
+<main class="container bg-info bg-opacity-50">
+    <div class="row">
+        <div class="col-md-3" align="center">
+            <img src="~/upload/images/@Model.Pizza.Image_Url"
+                 style="width:200px; height:200px;" alt="@Model.Pizza.Name" class="m-4 img-fluid img-thumbnail rounded" />
+        </div>
+        <div class="col-md-3">
+            <h3 class="mt-4">@Model.Pizza.Name</h3>
+            <div class=" d-flex align-items-center ms-1">
+                <p class="text-break">
+                    <span class="fs-5">Ingredients :</span><br />@Model.Pizza.Description
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-5" align="center">
+            <form asp-action="Upsert" method="post">
+                <input type="hidden" asp-for="Pizza.Id" />
+                <input type="hidden" asp-for="Order.Id" />
+                <input type="hidden" value="@Model.Pizza.Id" asp-for="Order.Pizza_Id" />
+                <input type="hidden" asp-for="@Model.Pizza.Image_Url" />
+                <input type="hidden" asp-for="@Model.Pizza.Name" />
+                <input type="hidden" asp-for="@Model.Pizza.Description" />
+                <input type="hidden" asp-for="@Model.Order.User_Id" />
+
+                <div class="form-group d-inline-block">
+                    <label asp-for="Order.Quantity" class="control-label"></label>
+                    <input asp-for="Order.Quantity" class="form-control m-2" style="width:290px;" />
+                    <span asp-validation-for="Order.Quantity" class="text-danger"></span>
+                </div>
+                <div class="form-group d-inline-block">
+                    @if (Model.Order.Id == 0)
+                    {
+                        <input type="submit" value="Order" class="btn btn-primary m-2" style="width:100px;" />
+                    }
+                    else
+                    {
+                        <input type="submit" value="Save Changes" class="btn btn-primary m-2" style="width:130px;" />
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+

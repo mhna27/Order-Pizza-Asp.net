@@ -1,0 +1,36 @@
+﻿@model Order_Pizza.ViewModels.ConfirmMobileVM
+@{
+    ViewData["Title"] = "Confirm Mobile";
+}
+
+<h1>Confirm Mobile</h1>
+
+<hr />
+<div class="row">
+    <div class="col-3">
+        <form asp-action="ConfirmMobile" method="post">
+            <input type="hidden" asp-for="Phone"/>
+            <input type="hidden" asp-for="Code"/>
+            <input type="hidden" asp-for="Redirect_To_Action"/>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Sms_Code" class="control-label"></label>
+                <input asp-for="Sms_Code" class="form-control"/>
+                <span class="text-secondary my-2">@Model.Code</span>
+                <span asp-validation-for="Sms_Code" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Confirm" class="btn btn-success"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-controller="Home" asp-action="Index">Back to Home</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
